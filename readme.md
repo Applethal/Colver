@@ -2,7 +2,7 @@
 
 
 # About
-In this code I attempted to write a mathematical solver that utilizes the Revised Simplex Algorithm by George B. Dantzig (1953) <del>using the Big-M method</del>. The model input should be written (In general form) as such:
+Pronounced Solver. In this codebase I attempted to write a mathematical solver that utilizes the Revised Simplex Algorithm by George B. Dantzig (1953) <del>using the Big-M method</del>. The model input should be written (In general form) as such:
 
 
 ```
@@ -58,7 +58,7 @@ $$
 $$
 
 
-Support for bounded variable simplex mode is available. To enable it, simply add a new parameter in the input file right after the `constraints count`. After inputting the constraints, in a new line add the keyword `BOUNDS`, `bounded variables count`, where the latter should be identical to the number stated in the header. Each line is associated to a bounded variable and is interpreted as such: `Variable index, Lower bound, Upper bound`. The `Variable index` is 1-indexed. 
+Support for bounded variable simplex mode is available. To enable it, simply add a new parameter in the input file right after the `constraints count`. After inputting the constraints to denote how many bounded variables your model has, in a new line add the keyword `BOUNDS`, `bounded variables count`, where the latter should be identical to the number stated in the header. Each line is associated to a bounded variable and is interpreted as such: `Variable index, Lower bound, Upper bound`. The `Variable index` uses the 1-indexed system. 
 
 ### Example 3:
 
@@ -104,15 +104,15 @@ To compile it run this in the parent folder:
 make
 ```
 
-Implicitly, all variables are non-negative (of course) you won't need to consider this. Explicitly adding non-negativity domain definitions for each variable will still allow the program to work and output the correct answers but it will result in having extra memory usage and more runtime (Similarly, if you use `>=` type constraint, you will introduce some extra memory and time costs, please consider reformulating). The algorithm uses the double floating precision. In the file `RSA.c` I defined some macros to limit the number of variables and constraints in the input file, feel free to adjust these for bigger models. To run this program, simply pass the text file and objective arguments:
+Implicitly, all variables are non-negative (of course) you won't need to consider this. Explicitly adding non-negativity domain definitions for each variable will still allow the program to work and output the correct answers but it will result in having extra memory usage and more runtime. Currently this implementation uses the double floating precision. In the file `RSA.c` I defined some macros to limit the number of variables and constraints in the input file, feel free to adjust these for bigger models. To run this program:
 
-```./RSA "filepath" "-Debug"```
+```./solver "filepath" "-Debug"```
 
 
 Where `filepath`is the `.csv` file path, `-Debug` is an optional flag that can be added as an argument, allowing you to see the solver operations step by step. The program will convert the problem to its canonical form then iteratively execute the algorithm until it terminates. The reason I am using the .csv file format is because of how portable it is + you can easily view whether the entries are valid using a Graphical CSV reader (e.g. OnlyOffice) to easily display whether data is missing.
 
 
-*Note*: By default the solver runs the Two-phase method scheme, which is slower since it solves twice. If you wish to use the Big M method (Artificials get max(coeffs) * 2 as a value), comment-out the function Solve_BigM and comment Solve in lines `86-87` before compiling. The Debug mode will run using the Big M method. The regular solving will use Two-Pass. I have yet to implement an additional flag to switch between the two modes for the sake of consistency. 
+*Note*: By default the solver runs the Two-phase method scheme, which is slower since it solves twice. If you wish to use the two-phase method, comment the function Solve_BigM and comment-out Solve in lines `86-87` in the `core_utils.c` file before compiling. The Debug mode will run using the Big M method, I did not add debugging features for the two-phase method. I have yet to implement an additional flag to switch between the two modes for the sake of consistency. 
 
 
 # How to contribute 
